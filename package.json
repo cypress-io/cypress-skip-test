@@ -1,11 +1,12 @@
 {
   "name": "@cypress/skip-test",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "Simple commands to skip a test based on platform, browser or an url",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "cypress run"
+    "test": "cypress run",
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "cypress",
@@ -15,7 +16,8 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "cypress": "3.6.0"
+    "cypress": "3.6.0",
+    "semantic-release": "^15.13.30"
   },
   "repository": {
     "type": "git",
