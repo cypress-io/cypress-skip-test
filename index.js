@@ -1,20 +1,6 @@
 /// <reference path="./index.d.ts" />
 // @ts-check
 
-// it('skips test', function () {
-//   cy.log('skipping')
-//   cy.wrap('foo').should('equal', 'foo')
-//   this.skip()
-// })
-
-// it('finds Mocha context', () => {
-//   cy.log('finding context')
-//     .wait(1000)
-//     .then(() => {
-//       cy.state('runnable').ctx.skip()
-//     })
-// })
-
 const { _ } = Cypress
 
 const normalizeName = name => {

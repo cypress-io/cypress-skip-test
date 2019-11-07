@@ -1,6 +1,68 @@
 # @cypress/skip-test
 > Simple commands to skip a test based on platform, browser or an url
 
+## Install
+
+```shell
+npm install -D @cypress/skip-test
+```
+
+Then add this module to your support file `cypress/support/index.js`
+
+```js
+require('@cypress/skip-test')
+```
+
+To get typings, reference this module, for example by using `reference` comment
+
+```js
+/// <reference types="@cypress/skip-test" />
+```
+
+![Skip intellisense](images/skip.png)
+
+## Example
+
+### `cy.skip`
+
+Skip this test if running in Electron browser
+
+```js
+it('only runs on Electron', () => {
+  cy.skipOn('electron')
+  // the rest of the test
+})
+```
+
+Skip this test if running on Windows platform
+
+```js
+it('runs on Linux and Mac', () => {
+  cy.skipOn('windows')
+  // the rest of the test
+})
+```
+
+### `cy.onlyOn`
+
+Continues the test only when running on Mac, skips when running on any other platform
+
+```js
+it('runs on Mac only', () => {
+  cy.onlyOn('mac')
+  // the rest of the test
+})
+```
+
+Continues this test only when running against `localhost`. Use `baseUrl` to set the url to compare.
+
+```js
+it('only tests localhost', () => {
+  cy.onlyOn('localhost')
+  // the rest of the test
+})
+```
+
 ## Authors
 
 - Kevin Old
