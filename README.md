@@ -68,7 +68,7 @@ it('only tests localhost', () => {
 ### imports
 
 ```js
-import { onlyOn, skipOn } from '../..'
+import { onlyOn, skipOn } from '@cypress/skip-test'
 
 it('runs only on Mac', () => {
   // using the exported function instead of
@@ -86,6 +86,7 @@ it('skips on Mac', () => {
 Instead of dynamically skipping a test at run-time, you can hide entire blocks of tests using the callback format.
 
 ```js
+import { onlyOn, skipOn } from '@cypress/skip-test'
 onlyOn('mac', () => {
   // this callback will only evaluate on Mac
   // thus the tests will be completely hidden from other platforms
@@ -96,6 +97,17 @@ onlyOn('mac', () => {
 skipOn('mac', () => {
   // this test will run on every platform but Mac
   it('hides this test on Mac', () => {})
+})
+```
+
+**Tip:** you can nest the callbacks to combine the conditions
+
+```js
+// run these group of tests only on Mac and only on Chrome
+onlyOn('mac', () => {
+  onlyOn('chrome', () => {
+    it('works', () => {})
+  })
 })
 ```
 
