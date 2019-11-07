@@ -11,6 +11,10 @@ it('skips this test when running on Mac', () => {
 
 ![Skip in action](images/skip.gif)
 
+## Important
+
+This is a simple utility plugin until [Cypress supports filtering of tests](https://github.com/cypress-io/cypress/pull/5346).
+
 ## Install
 
 ```shell
