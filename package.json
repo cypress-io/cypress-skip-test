@@ -5,13 +5,24 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run"
   },
-  "keywords": [],
+  "keywords": [
+    "cypress",
+    "cypress-plugin"
+  ],
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com> (https://glebbahmutov.com/)",
   "license": "MIT",
   "private": false,
   "devDependencies": {
     "cypress": "3.6.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cypress-io/cypress-skip-test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cypress-io/cypress-skip-test/issues"
+  },
+  "homepage": "https://github.com/cypress-io/cypress-skip-test#readme"
 }
