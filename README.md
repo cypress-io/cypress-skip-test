@@ -81,6 +81,24 @@ it('skips on Mac', () => {
 })
 ```
 
+### imports with callback
+
+Instead of dynamically skipping a test at run-time, you can hide entire blocks of tests using the callback format.
+
+```js
+onlyOn('mac', () => {
+  // this callback will only evaluate on Mac
+  // thus the tests will be completely hidden from other platforms
+  describe('Mac tests', () => {
+    it('works', () => {})
+  })
+})
+skipOn('mac', () => {
+  // this test will run on every platform but Mac
+  it('hides this test on Mac', () => {})
+})
+```
+
 ### Notes
 
 You can chain conditions together

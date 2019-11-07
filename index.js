@@ -33,7 +33,7 @@ const matchesUrlPart = normalizedName => {
 /**
  * Skips the current test based on the browser, platform or url.
  */
-export const skipOn = name => {
+export const skipOn = (name, cb) => {
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.skipOn(<name>), for example cy.skipOn("linux")'
@@ -46,31 +46,52 @@ export const skipOn = name => {
   }
 
   const normalizedName = normalizeName(name)
-  cy.log(`skipOn **${normalizedName}**`)
 
-  if (isPlatform(normalizedName)) {
-    if (Cypress.platform === normalizedName) {
-      skip()
+  if (cb) {
+    if (isPlatform(normalizedName)) {
+      if (Cypress.platform !== normalizedName) {
+        return cb()
+      }
+      return
     }
-    return
-  }
 
-  if (isBrowser(normalizedName)) {
-    if (Cypress.browser.name === normalizedName) {
-      skip()
+    if (isBrowser(normalizedName)) {
+      if (Cypress.browser.name !== normalizedName) {
+        return cb()
+      }
+      return
     }
-    return
-  }
 
-  if (matchesUrlPart(normalizedName)) {
-    return skip()
+    if (!matchesUrlPart(normalizedName)) {
+      return cb()
+    }
+  } else {
+    cy.log(`skipOn **${normalizedName}**`)
+
+    if (isPlatform(normalizedName)) {
+      if (Cypress.platform === normalizedName) {
+        skip()
+      }
+      return
+    }
+
+    if (isBrowser(normalizedName)) {
+      if (Cypress.browser.name === normalizedName) {
+        skip()
+      }
+      return
+    }
+
+    if (matchesUrlPart(normalizedName)) {
+      return skip()
+    }
   }
 }
 
 /**
  * Runs the current test only in the specified browser, platform or against url.
  */
-export const onlyOn = name => {
+export const onlyOn = (name, cb) => {
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.onlyOn(<name>), for example cy.onlyOn("linux")'
@@ -79,24 +100,38 @@ export const onlyOn = name => {
 
   const normalizedName = normalizeName(name)
 
-  cy.log(`onlyOn **${normalizedName}**`)
-
-  if (isPlatform(normalizedName)) {
-    if (Cypress.platform !== normalizedName) {
-      skip()
+  if (cb) {
+    if (isPlatform(normalizedName) && Cypress.platform === normalizedName) {
+      return cb()
     }
-    return
-  }
 
-  if (isBrowser(normalizedName)) {
-    if (Cypress.browser.name !== normalizedName) {
-      skip()
+    if (isBrowser(normalizedName) && Cypress.browser.name === normalizedName) {
+      return cb()
     }
-    return
-  }
 
-  if (!matchesUrlPart(normalizedName)) {
-    return skip()
+    if (matchesUrlPart(normalizedName)) {
+      return cb()
+    }
+  } else {
+    cy.log(`onlyOn **${normalizedName}**`)
+
+    if (isPlatform(normalizedName)) {
+      if (Cypress.platform !== normalizedName) {
+        skip()
+      }
+      return
+    }
+
+    if (isBrowser(normalizedName)) {
+      if (Cypress.browser.name !== normalizedName) {
+        skip()
+      }
+      return
+    }
+
+    if (!matchesUrlPart(normalizedName)) {
+      return skip()
+    }
   }
 }
 
