@@ -1,6 +1,16 @@
 # @cypress/skip-test
 > Simple commands to skip a test based on platform, browser or an url
 
+```js
+it('skips this test when running on Mac', () => {
+  cy.log('about to run custom command to skip this test')
+    .wait(1000)
+    .skipOn('mac')
+})
+```
+
+![Skip in action](images/skip.gif)
+
 ## Install
 
 ```shell
@@ -12,14 +22,6 @@ Then add this module to your support file `cypress/support/index.js`
 ```js
 require('@cypress/skip-test')
 ```
-
-To get typings, reference this module, for example by using `reference` comment
-
-```js
-/// <reference types="@cypress/skip-test" />
-```
-
-![Skip intellisense](images/skip.png)
 
 ## Example
 
@@ -62,6 +64,34 @@ it('only tests localhost', () => {
   // the rest of the test
 })
 ```
+
+### Notes
+
+You can chain conditions together
+
+```js
+it('combination of skip and only', () => {
+  cy.skipOn('firefox')
+  cy.onlyOn('electron').onlyOn('mac')
+  cy.log('running test')
+})
+```
+
+If the test runs, it will print the conditions in the command log
+
+![Skip and only](images/skip-and-only.png)
+
+## Intellisense
+
+To get typings, reference this module, for example by using `reference` comment
+
+```js
+/// <reference types="@cypress/skip-test" />
+```
+
+![Skip intellisense](images/skip.png)
+
+For more details read [Cypress Intelligent Completion Guide](https://on.cypress.io/intellisense)
 
 ## Authors
 
