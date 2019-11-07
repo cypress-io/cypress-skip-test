@@ -16,14 +16,74 @@
 //     })
 // })
 
-Cypress.Commands.add('skip', () => {
-  cy.state('runnable').ctx.skip()
+const { _ } = Cypress
+
+const normalizeName = name => {
+  name = name.toLowerCase()
+
+  // values are normalized strings we will use
+  const aliases = {
+    mac: 'darwin',
+    windows: 'win32'
+  }
+  const normalizedName = aliases[name] ? aliases[name] : name
+  return normalizedName
+}
+
+const getMochaContext = () => cy.state('runnable').ctx
+
+const isPlatform = name => ['win32', 'darwin', 'linux'].includes(name)
+const isBrowser = name => ['electron', 'chrome', 'firefox'].includes(name)
+const matchesPlatform = normalizedName =>
+  isPlatform(normalizedName) && Cypress.platform === normalizedName
+const matchesBrowser = normalizedName =>
+  isBrowser(normalizedName) && Cypress.browser.name === normalizedName
+const matchesUrlPart = normalizedName => {
+  // assuming name is part of the url, and the baseUrl should be set
+  const url = Cypress.config('baseUrl') || location.origin
+  return url && url.includes(normalizedName)
+}
+
+Cypress.Commands.add('skipOn', name => {
+  if (!_.isString(name) || '') {
+    throw new Error(
+      'Invalid syntax: cy.skipOn(<name>), for example cy.skipOn("linux")'
+    )
+  }
+
+  const skip = () => {
+    const ctx = getMochaContext()
+    return ctx.skip()
+  }
+
+  const normalizedName = normalizeName(name)
+
+  if (matchesPlatform(normalizedName)) {
+    return skip()
+  }
+
+  if (matchesBrowser(normalizedName)) {
+    return skip()
+  }
+
+  if (matchesUrlPart(normalizedName)) {
+    return skip()
+  }
 })
 
 it('skip test using custom command', () => {
   cy.log('about to run custom command to skip this test')
     .wait(1000)
-    .skip()
+    .skipOn('mac')
+})
+
+it('skips on Electron', () => {
+  cy.skipOn('electron')
+})
+
+it('skips on example.cypress.io', () => {
+  // cy.visit('https://example.cypress.io')
+  cy.skipOn('example.cypress.io')
 })
 
 // it('puts things into Mocha context', function () {
