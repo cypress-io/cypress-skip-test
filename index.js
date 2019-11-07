@@ -135,10 +135,6 @@ const onlyOn = (name, cb) => {
   }
 }
 
-Cypress.Commands.add('skipOn', skipOn)
-
-Cypress.Commands.add('onlyOn', onlyOn)
-
 module.exports = {
   skipOn,
   onlyOn

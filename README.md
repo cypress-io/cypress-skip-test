@@ -19,10 +19,10 @@ npm install -D @cypress/skip-test
 
 ## Example
 
-You can use this module as custom Cypress commands `cy.skipOn` and `cy.onlyOn` or by importing its functions. To use custom commands, add this module to your support file `cypress/support/index.js`
+You can use this module as custom Cypress commands `cy.skipOn` and `cy.onlyOn` or by importing its functions. To use custom commands like `cy.skipOn`, add this module to your support file `cypress/support/index.js`
 
 ```js
-require('@cypress/skip-test')
+require('@cypress/skip-test/support')
 ```
 
 ### `cy.skipOn`

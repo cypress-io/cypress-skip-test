@@ -29,6 +29,7 @@
   "homepage": "https://github.com/cypress-io/cypress-skip-test#readme",
   "files": [
     "index.js",
-    "index.d.ts"
+    "index.d.ts",
+    "support.js"
   ]
 }

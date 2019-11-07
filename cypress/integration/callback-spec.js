@@ -10,5 +10,6 @@ onlyOn('mac', () => {
 })
 
 skipOn('mac', () => {
+  // this test will run on every platform but Mac
   it('hides this test on Mac', () => {})
 })
