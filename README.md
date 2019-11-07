@@ -25,7 +25,7 @@ require('@cypress/skip-test')
 
 ## Example
 
-### `cy.skip`
+### `cy.skipOn`
 
 Skip this test if running in Electron browser
 
