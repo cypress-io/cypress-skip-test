@@ -1,6 +1,7 @@
 // enables intelligent code completion for Cypress commands
 // https://on.cypress.io/intelligent-code-completion
 /// <reference types="Cypress" />
+// @ts-check
 
 // it('skips test', function () {
 //   cy.log('skipping')
@@ -31,13 +32,14 @@ const normalizeName = name => {
 }
 
 const getMochaContext = () => cy.state('runnable').ctx
+const skip = () => {
+  const ctx = getMochaContext()
+  return ctx.skip()
+}
 
 const isPlatform = name => ['win32', 'darwin', 'linux'].includes(name)
 const isBrowser = name => ['electron', 'chrome', 'firefox'].includes(name)
-const matchesPlatform = normalizedName =>
-  isPlatform(normalizedName) && Cypress.platform === normalizedName
-const matchesBrowser = normalizedName =>
-  isBrowser(normalizedName) && Cypress.browser.name === normalizedName
+
 const matchesUrlPart = normalizedName => {
   // assuming name is part of the url, and the baseUrl should be set
   const url = Cypress.config('baseUrl') || location.origin
@@ -57,16 +59,53 @@ Cypress.Commands.add('skipOn', name => {
   }
 
   const normalizedName = normalizeName(name)
+  cy.log(`skipOn **${normalizedName}**`)
 
-  if (matchesPlatform(normalizedName)) {
-    return skip()
+  if (isPlatform(normalizedName)) {
+    if (Cypress.platform === normalizedName) {
+      skip()
+    }
+    return
   }
 
-  if (matchesBrowser(normalizedName)) {
-    return skip()
+  if (isBrowser(normalizedName)) {
+    if (Cypress.browser.name === normalizedName) {
+      skip()
+    }
+    return
   }
 
   if (matchesUrlPart(normalizedName)) {
+    return skip()
+  }
+})
+
+Cypress.Commands.add('onlyOn', name => {
+  if (!_.isString(name) || '') {
+    throw new Error(
+      'Invalid syntax: cy.onlyOn(<name>), for example cy.onlyOn("linux")'
+    )
+  }
+
+  const normalizedName = normalizeName(name)
+
+  cy.log(`onlyOn **${normalizedName}**`)
+
+  if (isPlatform(normalizedName)) {
+    if (Cypress.platform !== normalizedName) {
+      skip()
+    }
+    return
+  }
+
+  if (isBrowser(normalizedName)) {
+    if (Cypress.browser.name !== normalizedName) {
+      skip()
+    }
+    return
+  }
+
+  if (!matchesUrlPart(normalizedName)) {
     return skip()
   }
 })
@@ -84,6 +123,13 @@ it('skips on Electron', () => {
 it('skips on example.cypress.io', () => {
   // cy.visit('https://example.cypress.io')
   cy.skipOn('example.cypress.io')
+})
+
+it('only runs on Electron', () => {
+  cy.skipOn('firefox')
+  cy.onlyOn('electron')
+    .onlyOn('mac')
+    .wait(100)
 })
 
 // it('puts things into Mocha context', function () {
