@@ -93,6 +93,22 @@ To get typings, reference this module, for example by using `reference` comment
 
 For more details read [Cypress Intelligent Completion Guide](https://on.cypress.io/intellisense)
 
+## Warning
+
+Skipping tests in Mocha at run-time skips the `afterEach` hooks. In this example, `afterEach` will be skipped, and `after` hook will run.
+
+```js
+it('example', () => {
+  cy.skipOn('mac')
+})
+afterEach(() => {
+  // this will be skipped when a test is skipped
+})
+after(() => {
+  // this will run even after skipping test
+})
+```
+
 ## Authors
 
 - Kevin Old
