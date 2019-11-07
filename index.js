@@ -30,10 +30,34 @@ const matchesUrlPart = normalizedName => {
   return url && url.includes(normalizedName)
 }
 
+const skipOnBool = (flag, cb) => {
+  if (!_.isBoolean(flag)) {
+    throw new Error(
+      'Invalid syntax: cy.skipOn(<boolean flag>), for example cy.skipOn(true)'
+    )
+  }
+
+  if (cb) {
+    if (!flag) {
+      return cb()
+    }
+  } else {
+    cy.log(`skipOn **${flag}**`)
+
+    if (flag) {
+      skip()
+    }
+  }
+}
+
 /**
  * Skips the current test based on the browser, platform or url.
  */
 const skipOn = (name, cb) => {
+  if (_.isBoolean(name)) {
+    return skipOnBool(name, cb)
+  }
+
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.skipOn(<name>), for example cy.skipOn("linux")'
@@ -88,10 +112,36 @@ const skipOn = (name, cb) => {
   }
 }
 
+const onlyOnBool = (flag, cb) => {
+  if (!_.isBoolean(flag)) {
+    throw new Error(
+      'Invalid syntax: cy.onlyOn(<boolean>), for example cy.onlyOn(true)'
+    )
+  }
+
+  if (cb) {
+    if (flag) {
+      return cb()
+    }
+  } else {
+    cy.log(`onlyOn **${flag}**`)
+
+    if (!flag) {
+      skip()
+    }
+  }
+}
+
 /**
  * Runs the current test only in the specified browser, platform or against url.
+ * @param {string|boolean} name - condition, could be platform, browser name, url or true|false.
+ * @param {() => void} cb - Optional, run the given callback if the condition passes
  */
 const onlyOn = (name, cb) => {
+  if (_.isBoolean(name)) {
+    return onlyOnBool(name, cb)
+  }
+
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.onlyOn(<name>), for example cy.onlyOn("linux")'

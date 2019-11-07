@@ -111,6 +111,39 @@ onlyOn('mac', () => {
 })
 ```
 
+### boolean flag
+
+You can pass a boolean to each function or command if you want to calculate when to run the tests yourself.
+
+```js
+// run this test if S is "foo"
+cy.onlyOn(S === 'foo')
+```
+
+You can use callback form with the flag
+
+```js
+onlyOn(S === 'foo', () => {
+  describe('foo', () => {
+    it('works', () => {...})
+  })
+})
+```
+
+You can even run other Cypress commands before deciding to skip or continue
+
+```js
+it.only('runs if task returns production', () => {
+  cy.task('getDbName').then(name => cy.onlyOn(name === 'production'))
+  // equivalent
+  cy.task('getDbName').then(name => onlyOn(name === 'production'))
+  // equivalent
+  cy.task('getDbName')
+    .then(name => name === 'production')
+    .then(onlyOn)
+})
+```
+
 ### Notes
 
 You can chain conditions together
