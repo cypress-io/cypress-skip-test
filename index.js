@@ -33,7 +33,7 @@ const matchesUrlPart = normalizedName => {
 /**
  * Skips the current test based on the browser, platform or url.
  */
-export const skipOn = (name, cb) => {
+const skipOn = (name, cb) => {
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.skipOn(<name>), for example cy.skipOn("linux")'
@@ -91,7 +91,7 @@ export const skipOn = (name, cb) => {
 /**
  * Runs the current test only in the specified browser, platform or against url.
  */
-export const onlyOn = (name, cb) => {
+const onlyOn = (name, cb) => {
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.onlyOn(<name>), for example cy.onlyOn("linux")'
@@ -138,3 +138,8 @@ export const onlyOn = (name, cb) => {
 Cypress.Commands.add('skipOn', skipOn)
 
 Cypress.Commands.add('onlyOn', onlyOn)
+
+module.exports = {
+  skipOn,
+  onlyOn
+}
