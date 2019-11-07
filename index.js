@@ -30,7 +30,10 @@ const matchesUrlPart = normalizedName => {
   return url && url.includes(normalizedName)
 }
 
-Cypress.Commands.add('skipOn', name => {
+/**
+ * Skips the current test based on the browser, platform or url.
+ */
+export const skipOn = name => {
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.skipOn(<name>), for example cy.skipOn("linux")'
@@ -62,9 +65,12 @@ Cypress.Commands.add('skipOn', name => {
   if (matchesUrlPart(normalizedName)) {
     return skip()
   }
-})
+}
 
-Cypress.Commands.add('onlyOn', name => {
+/**
+ * Runs the current test only in the specified browser, platform or against url.
+ */
+export const onlyOn = name => {
   if (!_.isString(name) || '') {
     throw new Error(
       'Invalid syntax: cy.onlyOn(<name>), for example cy.onlyOn("linux")'
@@ -92,4 +98,8 @@ Cypress.Commands.add('onlyOn', name => {
   if (!matchesUrlPart(normalizedName)) {
     return skip()
   }
-})
+}
+
+Cypress.Commands.add('skipOn', skipOn)
+
+Cypress.Commands.add('onlyOn', onlyOn)

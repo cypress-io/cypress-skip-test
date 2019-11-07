@@ -17,13 +17,13 @@ it('skips this test when running on Mac', () => {
 npm install -D @cypress/skip-test
 ```
 
-Then add this module to your support file `cypress/support/index.js`
+## Example
+
+You can use this module as custom Cypress commands `cy.skipOn` and `cy.onlyOn` or by importing its functions. To use custom commands, add this module to your support file `cypress/support/index.js`
 
 ```js
 require('@cypress/skip-test')
 ```
-
-## Example
 
 ### `cy.skipOn`
 
@@ -62,6 +62,22 @@ Continues this test only when running against `localhost`. Use `baseUrl` to set 
 it('only tests localhost', () => {
   cy.onlyOn('localhost')
   // the rest of the test
+})
+```
+
+### imports
+
+```js
+import { onlyOn, skipOn } from '../..'
+
+it('runs only on Mac', () => {
+  // using the exported function instead of
+  // the custom command cy.onlyOn(...)
+  onlyOn('mac')
+})
+
+it('skips on Mac', () => {
+  skipOn('darwin')
 })
 ```
 
