@@ -26,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/cypress-io/cypress-skip-test/issues"
   },
-  "homepage": "https://github.com/cypress-io/cypress-skip-test#readme"
+  "homepage": "https://github.com/cypress-io/cypress-skip-test#readme",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ]
 }
