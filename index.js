@@ -3,13 +3,24 @@
 
 const { _ } = Cypress
 
+/**
+ * Cleans up the passed name which could be browser, platform or other.
+ * @param {string} name The environment or platform or something else, like url
+ * @returns {string} Normalized name
+ * @example
+ * normalizeName('mac') // 'darwin'
+ * normalizeName('windows') // 'win32'
+ * normalizeName('WIN') // 'win32'
+ * normalizeName('localhost') // 'localhost'
+ */
 const normalizeName = name => {
   name = name.toLowerCase()
 
   // values are normalized strings we will use
   const aliases = {
     mac: 'darwin',
-    windows: 'win32'
+    windows: 'win32',
+    win: 'win32'
   }
   const normalizedName = aliases[name] ? aliases[name] : name
   return normalizedName
