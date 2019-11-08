@@ -26,6 +26,30 @@ const normalizeName = name => {
   return normalizedName
 }
 
+/**
+ * Returns true if the test is running on the given browser or platform
+ * or against given url.
+ * @param {string} name Browser name, platform or url.
+ * @returns {boolean} Returns true if the test runs against the given condition.
+ */
+const isOn = name => {
+  if (!_.isString(name)) {
+    throw new Error('Invalid syntax: isOn expects a string argument')
+  }
+
+  const normalizedName = normalizeName(name)
+
+  if (isPlatform(normalizedName)) {
+    return Cypress.platform === normalizedName
+  }
+
+  if (isBrowser(normalizedName)) {
+    return Cypress.browser.name === normalizedName
+  }
+
+  return matchesUrlPart(normalizedName)
+}
+
 const getMochaContext = () => cy.state('runnable').ctx
 const skip = () => {
   const ctx = getMochaContext()
@@ -73,11 +97,6 @@ const skipOn = (name, cb) => {
     throw new Error(
       'Invalid syntax: cy.skipOn(<name>), for example cy.skipOn("linux")'
     )
-  }
-
-  const skip = () => {
-    const ctx = getMochaContext()
-    return ctx.skip()
   }
 
   const normalizedName = normalizeName(name)
@@ -159,38 +178,14 @@ const onlyOn = (name, cb) => {
     )
   }
 
-  const normalizedName = normalizeName(name)
-
   if (cb) {
-    if (isPlatform(normalizedName) && Cypress.platform === normalizedName) {
-      return cb()
-    }
-
-    if (isBrowser(normalizedName) && Cypress.browser.name === normalizedName) {
-      return cb()
-    }
-
-    if (matchesUrlPart(normalizedName)) {
+    if (isOn(name)) {
       return cb()
     }
   } else {
+    const normalizedName = normalizeName(name)
     cy.log(`onlyOn **${normalizedName}**`)
-
-    if (isPlatform(normalizedName)) {
-      if (Cypress.platform !== normalizedName) {
-        skip()
-      }
-      return
-    }
-
-    if (isBrowser(normalizedName)) {
-      if (Cypress.browser.name !== normalizedName) {
-        skip()
-      }
-      return
-    }
-
-    if (!matchesUrlPart(normalizedName)) {
+    if (!isOn(name)) {
       return skip()
     }
   }
@@ -198,5 +193,6 @@ const onlyOn = (name, cb) => {
 
 module.exports = {
   skipOn,
-  onlyOn
+  onlyOn,
+  isOn
 }

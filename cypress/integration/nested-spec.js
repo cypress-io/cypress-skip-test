@@ -7,3 +7,9 @@ onlyOn('mac', () => {
     it('works', () => {})
   })
 })
+
+onlyOn('mac', () => {
+  onlyOn('electron', () => {
+    it('runs on Mac Electron', () => {})
+  })
+})

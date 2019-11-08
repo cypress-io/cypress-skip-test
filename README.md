@@ -148,6 +148,24 @@ it.only('runs if task returns production', () => {
 })
 ```
 
+### `isOn`
+
+You can check the condition against a browser name or an environment yourself.
+
+```js
+import {isOn} from '@cypress/skip-test'
+it('loads users', () => {
+  // when running on Windows locally, the backend is not running
+  // thus we need to stub XHR requests
+  if (isOn('windows') && isOn('localhost')) {
+    cy.server()
+    cy.route('/users', 'fixture:users')
+  }
+  cy.visit('/')
+  cy.get('.user').should('have.length', 10)
+})
+```
+
 ### Notes
 
 You can chain conditions together
