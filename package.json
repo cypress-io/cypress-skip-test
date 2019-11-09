@@ -17,7 +17,7 @@
   "private": false,
   "devDependencies": {
     "cypress": "3.6.0",
-    "semantic-release": "^15.13.30"
+    "semantic-release": "15.13.30"
   },
   "repository": {
     "type": "git",
