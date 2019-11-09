@@ -16,7 +16,7 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "cypress": "3.6.0",
+    "cypress": "3.6.1",
     "semantic-release": "^15.13.30"
   },
   "repository": {
