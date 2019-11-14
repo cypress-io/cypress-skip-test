@@ -15,3 +15,12 @@ it('returns true for current url', () => {
   expect(isOn(url)).to.be.true
   expect(isOn('foo.com')).to.be.false
 })
+
+it('uses variable ENVIRONMENT', () => {
+  Cypress.env('ENVIRONMENT', 'current test')
+  expect(isOn('current test'), 'matches current ENVIRONMENT').to.be.true
+  expect(isOn('anywhere else'), 'any other value').to.be.false
+
+  Cypress.env('ENVIRONMENT', 'test env 2')
+  expect(isOn('test env 2'), 'matches second ENVIRONMENT').to.be.true
+})
