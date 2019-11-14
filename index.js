@@ -47,9 +47,14 @@ const isOn = name => {
     return Cypress.browser.name === normalizedName
   }
 
+  if (isEnvironment(name)) {
+    return true
+  }
+
   return matchesUrlPart(normalizedName)
 }
 
+// @ts-ignore "cy.state" is not in the "cy" type
 const getMochaContext = () => cy.state('runnable').ctx
 const skip = () => {
   const ctx = getMochaContext()
@@ -58,6 +63,15 @@ const skip = () => {
 
 const isPlatform = name => ['win32', 'darwin', 'linux'].includes(name)
 const isBrowser = name => ['electron', 'chrome', 'firefox'].includes(name)
+/**
+ * You can pass custom environment name when running Cypress
+ * @example
+ * CYPRESS_ENVIRONMENT=staging npx cypress run
+ * @param {string} name Is checked against `ENVIRONMENT` value
+ * @returns {boolean} true if the given argument matches environment string
+ */
+const isEnvironment = name =>
+  Cypress.env('ENVIRONMENT') && Cypress.env('ENVIRONMENT') === name
 
 const matchesUrlPart = normalizedName => {
   // assuming name is part of the url, and the baseUrl should be set

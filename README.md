@@ -1,4 +1,5 @@
 # @cypress/skip-test [![renovate-app badge][renovate-badge]][renovate-app] [![semantic-release][semantic-image] ][semantic-url] [![CircleCI](https://circleci.com/gh/cypress-io/cypress-skip-test/tree/master.svg?style=svg)](https://circleci.com/gh/cypress-io/cypress-skip-test/tree/master)
+
 > Simple commands to skip a test based on platform, browser or an url
 
 ```js
@@ -137,7 +138,7 @@ onlyOn(S === 'foo', () => {
 You can even run other Cypress commands before deciding to skip or continue
 
 ```js
-it.only('runs if task returns production', () => {
+it('runs if task returns production', () => {
   cy.task('getDbName').then(name => cy.onlyOn(name === 'production'))
   // equivalent
   cy.task('getDbName').then(name => onlyOn(name === 'production'))
@@ -153,7 +154,7 @@ it.only('runs if task returns production', () => {
 You can check the condition against a browser name or an environment yourself.
 
 ```js
-import {isOn} from '@cypress/skip-test'
+import { isOn } from '@cypress/skip-test'
 it('loads users', () => {
   // when running on Windows locally, the backend is not running
   // thus we need to stub XHR requests
@@ -165,6 +166,32 @@ it('loads users', () => {
   cy.get('.user').should('have.length', 10)
 })
 ```
+
+### `ENVIRONMENT`
+
+This module also reads special environment variable `ENVIRONMENT` inside its checks. For example, to only stub network calls on `staging` environment, execute the tests like this:
+
+```shell
+CYPRESS_ENVIRONMENT=staging npx cypress run
+```
+
+Inside the spec file you can write
+
+```js
+import {onlyOn} from '@cypress/skip-test'
+const stubServer = () => {
+  cy.server()
+  cy.route('/api/me', 'fx:me.json')
+  cy.route('/api/permissions', 'fx:permissions.json')
+  // Lots of fixtures ...
+}
+it('works', () => {
+  onlyOn('staging', stubServer)
+  ...
+})
+```
+
+The test `works` will stub network calls when running on `staging`, but will skip calling `stubServer` for other environments.
 
 ### Notes
 
