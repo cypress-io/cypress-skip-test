@@ -54,7 +54,7 @@ const isOn = name => {
   }
 
   if (isBrowser(normalizedName)) {
-    return Cypress.browser.name === normalizedName
+    return checkBrowserName(normalizedName)
   }
 
   if (isEnvironment(name)) {
@@ -154,7 +154,7 @@ const skipOn = (name, cb) => {
     }
 
     if (isBrowser(normalizedName)) {
-      if (Cypress.browser.name === normalizedName) {
+      if (checkBrowserName(normalizedName)) {
         skip()
       }
       return
