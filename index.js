@@ -3,6 +3,16 @@
 
 const { _ } = Cypress
 
+const checkBrowserName = name => {
+  if ('isBrowser' in Cypress) {
+    // use the new v4.0 method
+    // @ts-ignore
+    return Cypress.isBrowser(name)
+  } else {
+    return Cypress.browser.name === name
+  }
+}
+
 /**
  * Cleans up the passed name which could be browser, platform or other.
  * @param {string} name The environment or platform or something else, like url
@@ -124,10 +134,10 @@ const skipOn = (name, cb) => {
     }
 
     if (isBrowser(normalizedName)) {
-      if (Cypress.browser.name !== normalizedName) {
+      if (!checkBrowserName(normalizedName)) {
         return cb()
       }
-      return
+      return it(`Skipping test(s) on ${normalizedName}`)
     }
 
     if (!matchesUrlPart(normalizedName)) {
