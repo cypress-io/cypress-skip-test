@@ -7,7 +7,8 @@
   "scripts": {
     "test": "cypress run",
     "semantic-release": "semantic-release",
-    "format": "prettier --write '*.js' 'cypress/**/*.js'"
+    "format": "prettier --write '*.js' 'cypress/**/*.js'",
+    "e2e": "mocha --timeout 30000 test"
   },
   "keywords": [
     "cypress",
@@ -18,8 +19,11 @@
   "private": false,
   "devDependencies": {
     "cypress": "3.8.3",
+    "debug": "4.1.1",
+    "mocha": "7.0.1",
     "prettier": "1.19.1",
-    "semantic-release": "15.14.0"
+    "semantic-release": "15.14.0",
+    "spok": "1.3.0"
   },
   "repository": {
     "type": "git",

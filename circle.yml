@@ -5,6 +5,9 @@ workflows:
   build:
     jobs:
       - cypress/run:
+          executor: cypress/browsers-chrome76
           no-workspace: true
           post-steps:
+            # execute full tests
+            - run: npm run e2e
             - run: npm run semantic-release
