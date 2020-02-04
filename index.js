@@ -57,6 +57,10 @@ const isOn = name => {
     return checkBrowserName(normalizedName)
   }
 
+  if (isHeadedName(normalizedName)) {
+    return headedMatches(normalizedName)
+  }
+
   if (isEnvironment(name)) {
     return true
   }
@@ -224,6 +228,8 @@ const onlyOn = (name, cb) => {
   if (cb) {
     if (isOn(name)) {
       return cb()
+    } else {
+      return it(`Skipping test(s), not on ${name}`)
     }
   } else {
     const normalizedName = normalizeName(name)
