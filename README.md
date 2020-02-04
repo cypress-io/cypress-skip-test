@@ -167,6 +167,30 @@ it('loads users', () => {
 })
 ```
 
+### Headed
+
+You can skip or run tests in headed / headless environments
+
+```js
+import { skipOn, onlyOn } from '@cypress/skip-test'
+
+skipOn('headed', () => {
+  it('skips the current test in headed mode', () => {
+    cy.wrap(true).should('equal', true)
+  })
+})
+
+onlyOn('headless', () => {
+  it('runs only in headless mode', () => { ... })
+})
+```
+
+**Note:** when skipping tests in this case, it will insert an empty placeholder test to provide information why the tests were skipped.
+
+```text
+- Skipping test(s), not on headed
+```
+
 ### `ENVIRONMENT`
 
 This module also reads special environment variable `ENVIRONMENT` inside its checks. For example, to only stub network calls on `staging` environment, execute the tests like this:
