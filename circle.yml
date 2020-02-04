@@ -5,6 +5,7 @@ workflows:
   build:
     jobs:
       - cypress/run:
+          executor: cypress/browsers-chrome76
           no-workspace: true
           post-steps:
             # execute full tests
