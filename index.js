@@ -73,6 +73,18 @@ const skip = () => {
 
 const isPlatform = name => ['win32', 'darwin', 'linux'].includes(name)
 const isBrowser = name => ['electron', 'chrome', 'firefox'].includes(name)
+const isHeadedName = name => ['headed', 'headless'].includes(name)
+
+const headedMatches = name => {
+  if (name === 'headed') {
+    return Cypress.browser.isHeaded
+  }
+  if (name === 'headless') {
+    return Cypress.browser.isHeadless
+  }
+  throw new Error(`Do not know how to treat headed flag "${name}"`)
+}
+
 /**
  * You can pass custom environment name when running Cypress
  * @example
@@ -138,6 +150,13 @@ const skipOn = (name, cb) => {
         return cb()
       }
       return it(`Skipping test(s) on ${normalizedName}`)
+    }
+
+    if (isHeadedName(normalizedName)) {
+      if (!headedMatches(normalizedName)) {
+        return cb()
+      }
+      return it(`Skipping test(s) in ${normalizedName} mode`)
     }
 
     if (!matchesUrlPart(normalizedName)) {
