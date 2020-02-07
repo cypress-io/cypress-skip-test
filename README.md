@@ -116,6 +116,17 @@ onlyOn('mac', () => {
 })
 ```
 
+When skipping a block of tests or a single test using browser name, it will insert a dummy empty test to let you know what has happened
+
+```js
+skipOn('firefox', () => {
+  it('works', () => {...})
+  it('works too', () => {...})
+})
+// output in the console
+//  Skipping test(s) on firefox
+```
+
 ### boolean flag
 
 You can pass a boolean to each function or command if you want to calculate when to run the tests yourself.
