@@ -6,7 +6,7 @@ const debug = require('debug')('test')
 /* eslint-env mocha */
 describe('skipping at run-time', () => {
   // particular test we want to focus on
-  const title = 'skips on Electron'
+  const title = 'skips this test on Electron'
 
   const assertResults = results => {
     // let's confirm the number of tests
@@ -22,6 +22,7 @@ describe('skipping at run-time', () => {
   }
 
   const findOurTest = results => {
+    debug('looking for test with title "%s"', title)
     const testSkippedOnElectron = results.runs[0].tests.find(
       t => t.title[0] === title
     )
@@ -35,17 +36,20 @@ describe('skipping at run-time', () => {
     return cypress
       .run({
         spec: 'cypress/integration/spec.js',
+        browser: 'electron',
+        headless: true,
         video: false
       })
       .then(results => {
         assertResults(results)
         const test = findOurTest(results)
+        debug('found test object %o', test)
 
         // the test should be pending (which means it was skipped)
         spok(assert, test, {
           title,
           state: 'pending',
-          error: null
+          error: 'sync skip; aborting execution'
         })
       })
   })
