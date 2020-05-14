@@ -3,7 +3,7 @@
 
 const { _ } = Cypress
 
-const checkBrowserName = name => {
+const checkBrowserName = (name) => {
   if ('isBrowser' in Cypress) {
     // use the new v4.0 method
     // @ts-ignore
@@ -23,7 +23,7 @@ const checkBrowserName = name => {
  * normalizeName('WIN') // 'win32'
  * normalizeName('localhost') // 'localhost'
  */
-const normalizeName = name => {
+const normalizeName = (name) => {
   name = name.toLowerCase()
 
   // values are normalized strings we will use
@@ -42,7 +42,7 @@ const normalizeName = name => {
  * @param {string} name Browser name, platform or url.
  * @returns {boolean} Returns true if the test runs against the given condition.
  */
-const isOn = name => {
+const isOn = (name) => {
   if (!_.isString(name)) {
     throw new Error('Invalid syntax: isOn expects a string argument')
   }
@@ -75,11 +75,11 @@ const skip = () => {
   return ctx.skip()
 }
 
-const isPlatform = name => ['win32', 'darwin', 'linux'].includes(name)
-const isBrowser = name => ['electron', 'chrome', 'firefox'].includes(name)
-const isHeadedName = name => ['headed', 'headless'].includes(name)
+const isPlatform = (name) => ['win32', 'darwin', 'linux'].includes(name)
+const isBrowser = (name) => ['electron', 'chrome', 'firefox'].includes(name)
+const isHeadedName = (name) => ['headed', 'headless'].includes(name)
 
-const headedMatches = name => {
+const headedMatches = (name) => {
   if (name === 'headed') {
     return Cypress.browser.isHeaded
   }
@@ -96,10 +96,10 @@ const headedMatches = name => {
  * @param {string} name Is checked against `ENVIRONMENT` value
  * @returns {boolean} true if the given argument matches environment string
  */
-const isEnvironment = name =>
+const isEnvironment = (name) =>
   Cypress.env('ENVIRONMENT') && Cypress.env('ENVIRONMENT') === name
 
-const matchesUrlPart = normalizedName => {
+const matchesUrlPart = (normalizedName) => {
   // assuming name is part of the url, and the baseUrl should be set
   const url = Cypress.config('baseUrl') || location.origin
   return url && url.includes(normalizedName)
@@ -126,7 +126,9 @@ const skipOnBool = (flag, cb) => {
 }
 
 /**
- * Skips the current test based on the browser, platform or url.
+ * Skips the current test only in the specified browser, platform or against url.
+ * @param {string|boolean} name - condition, could be platform, browser name, url or true|false.
+ * @param {() => void} cb - Optional, run the given callback if the condition passes
  */
 const skipOn = (name, cb) => {
   if (_.isBoolean(name)) {
@@ -139,51 +141,16 @@ const skipOn = (name, cb) => {
     )
   }
 
-  const normalizedName = normalizeName(name)
-
   if (cb) {
-    if (isPlatform(normalizedName)) {
-      if (Cypress.platform !== normalizedName) {
-        return cb()
-      }
-      return
-    }
-
-    if (isBrowser(normalizedName)) {
-      if (!checkBrowserName(normalizedName)) {
-        return cb()
-      }
-      return it(`Skipping test(s) on ${normalizedName}`)
-    }
-
-    if (isHeadedName(normalizedName)) {
-      if (!headedMatches(normalizedName)) {
-        return cb()
-      }
-      return it(`Skipping test(s) in ${normalizedName} mode`)
-    }
-
-    if (!matchesUrlPart(normalizedName)) {
+    if (!isOn(name)) {
       return cb()
+    } else {
+      return it(`Skipping test(s), on ${name}`)
     }
   } else {
+    const normalizedName = normalizeName(name)
     cy.log(`skipOn **${normalizedName}**`)
-
-    if (isPlatform(normalizedName)) {
-      if (Cypress.platform === normalizedName) {
-        skip()
-      }
-      return
-    }
-
-    if (isBrowser(normalizedName)) {
-      if (checkBrowserName(normalizedName)) {
-        skip()
-      }
-      return
-    }
-
-    if (matchesUrlPart(normalizedName)) {
+    if (isOn(name)) {
       return skip()
     }
   }
