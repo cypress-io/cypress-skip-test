@@ -32,7 +32,7 @@ it('does not run given function for other environments', () => {
   expect(called, 'callback was NOT called').to.be.undefined
 })
 
-it('skips given function for some environment', () => {
+it('does not run given function for some environment', () => {
   Cypress.env('ENVIRONMENT', 'test1')
   let called
   skipOn('test1', () => {
