@@ -34,6 +34,7 @@ workflows:
           # we need newer Node for semantic release
           executor: cypress/base-12-6-0
           requires:
+            - Cypress v4 tests
             - Cypress tests
           install-command: echo 'Nothing to install in this job'
           no-workspace: true
