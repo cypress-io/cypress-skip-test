@@ -5,6 +5,18 @@ workflows:
   build:
     jobs:
       - cypress/run:
+          name: Cypress v4 tests
+          executor: cypress/browsers-chrome78-ff70
+          no-workspace: true
+          post-install:
+            - run: npm install cypress@4
+            - run: npx cypress info
+          post-steps:
+            # execute full tests
+            - run: npm run e2e
+
+      - cypress/run:
+          name: Cypress tests
           executor: cypress/browsers-chrome78-ff70
           no-workspace: true
           post-install:
