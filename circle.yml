@@ -5,7 +5,7 @@ workflows:
   build:
     jobs:
       - cypress/run:
-          executor: cypress/browsers-chrome76
+          executor: cypress/browsers-chrome78-ff70
           no-workspace: true
           post-install:
             # print info about OS and found browsers
