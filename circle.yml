@@ -7,6 +7,9 @@ workflows:
       - cypress/run:
           executor: cypress/browsers-chrome76
           no-workspace: true
+          post-install:
+            # print info about OS and found browsers
+            - run: npx cypress info
           post-steps:
             # execute full tests
             - run: npm run e2e
