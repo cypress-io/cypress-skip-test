@@ -8,6 +8,7 @@ workflows:
           name: Cypress v4 tests
           executor: cypress/browsers-chrome78-ff70
           no-workspace: true
+          cache-key: 'cache-cypress-v4'
           post-install:
             - run: npm install cypress@4
             - run: npx cypress info
