@@ -19,11 +19,23 @@ workflows:
       - cypress/run:
           name: Cypress tests
           executor: cypress/browsers-chrome78-ff70
-          no-workspace: true
           post-install:
             # print info about OS and found browsers
             - run: npx cypress info
           post-steps:
             # execute full tests
             - run: npm run e2e
-            - run: npm run semantic-release
+
+      # this job attaches the workspace left by the install job
+      # so it is ready to run Cypress tests
+      # only we will run semantic release script instead
+      - cypress/run:
+          name: NPM release
+          # we need newer Node for semantic release
+          executor: cypress/base-12-6-0
+          requires:
+            - Cypress tests
+          install-command: echo 'Nothing to install in this job'
+          no-workspace: true
+          # instead of "cypress run" do NPM release 😁
+          command: npm run semantic-release
