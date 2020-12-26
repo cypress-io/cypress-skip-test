@@ -20,7 +20,7 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "cypress": "6.0.0",
+    "cypress": "6.2.0",
     "debug": "4.3.1",
     "mocha": "8.2.1",
     "prettier": "2.2.1",
