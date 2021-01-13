@@ -78,7 +78,7 @@ const skip = () => {
 const isPlatform = name => ['win32', 'darwin', 'linux'].includes(name)
 const isBrowser = name => ['electron', 'chrome', 'firefox'].includes(name)
 const isHeadedName = name => ['headed', 'headless'].includes(name)
-const isEnvironmentSet = () => Cypress.env('ENVIRONMENT')
+const isEnvironmentSet = () => typeof Cypress.env('ENVIRONMENT') === 'string' && Cypress.env('ENVIRONMENT')
 
 const headedMatches = name => {
   if (name === 'headed') {
