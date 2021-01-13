@@ -78,6 +78,7 @@ const skip = () => {
 const isPlatform = name => ['win32', 'darwin', 'linux'].includes(name)
 const isBrowser = name => ['electron', 'chrome', 'firefox'].includes(name)
 const isHeadedName = name => ['headed', 'headless'].includes(name)
+const isEnvironmentSet = () => typeof Cypress.env('ENVIRONMENT') === 'string' && Cypress.env('ENVIRONMENT')
 
 const headedMatches = name => {
   if (name === 'headed') {
@@ -163,6 +164,13 @@ const skipOn = (name, cb) => {
       return it(`Skipping test(s) in ${normalizedName} mode`)
     }
 
+    if (isEnvironmentSet()) {
+      if (!isEnvironment(normalizedName)) {
+        return cb()
+      }
+      return it(`Skipping test(s) on ${normalizedName} environment`)
+    }
+
     if (!matchesUrlPart(normalizedName)) {
       return cb()
     }
@@ -181,6 +189,12 @@ const skipOn = (name, cb) => {
         skip()
       }
       return
+    }
+
+    if (isEnvironmentSet()) {
+      if (isEnvironment(normalizedName)) {
+        return skip()
+      }
     }
 
     if (matchesUrlPart(normalizedName)) {

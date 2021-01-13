@@ -27,6 +27,16 @@ it('runs if task returns production', () => {
     .then(onlyOn)
 })
 
+it('runs when on the set environment', () => {
+  Cypress.env('ENVIRONMENT', 'production')
+  onlyOn('production')
+})
+
+it('skips when on the set environment', () => {
+  Cypress.env('ENVIRONMENT', 'production')
+  skipOn('production')
+})
+
 it('skips if task returns production', () => {
   cy.task('getDbName').then(name => skipOn(name === 'production'))
 })
