@@ -24,7 +24,7 @@ declare namespace Cypress {
     })
     ```
     */
-    skipOn(nameOrFlag: string|boolean, cb?: () => void): Chainable<Subject>
+    skipOn(nameOrFlag: string | boolean, cb?: () => void): Chainable<Subject>
 
     /**
     * Only runs the current test if the current browser or platform matches the given name
@@ -44,6 +44,16 @@ declare namespace Cypress {
     })
     ```
     */
-    onlyOn(nameOrFlag: string|boolean, cb?: () => void): Chainable<Subject>
+    onlyOn(nameOrFlag: string | boolean, cb?: () => void): Chainable<Subject>
   }
 }
+
+export const skipOn: (
+  nameOrFlag: string | boolean,
+  cb?: () => void
+) => Cypress.Chainable<any>
+export const onlyOn: (
+  nameOrFlag: string | boolean,
+  cb?: () => void
+) => Cypress.Chainable<any>
+export const isOn: (name: string) => boolean
