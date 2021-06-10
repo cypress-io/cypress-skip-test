@@ -80,6 +80,8 @@ const isBrowser = (name) => ['electron', 'chrome', 'firefox'].includes(name)
 const isHeadedName = (name) => ['headed', 'headless'].includes(name)
 const isEnvironmentSet = () =>
   typeof Cypress.env('ENVIRONMENT') === 'string' && Cypress.env('ENVIRONMENT')
+const isAsyncFn = (name) =>
+  Object.prototype.toString.call(name) === '[object AsyncFunction]'
 
 const headedMatches = (name) => {
   if (name === 'headed') {
@@ -129,10 +131,20 @@ const skipOnBool = (flag, cb) => {
 
 /**
  * Skips the current test based on the browser, platform or url.
+ * @param {string|boolean|Function} name - condition, could be platform, browser name, url or true|false.
+ * @param {() => void} cb - Optional, run the given callback if the condition passes
  */
 const skipOn = (name, cb) => {
   if (_.isBoolean(name)) {
     return skipOnBool(name, cb)
+  }
+
+  if (isAsyncFn(name)) {
+    return name().then((result) => onlyOnBool(result, cb))
+  }
+
+  if (_.isFunction(name)) {
+    return onlyOnBool(name(), cb)
   }
 
   if (!_.isString(name) || '') {
@@ -226,7 +238,7 @@ const onlyOnBool = (flag, cb) => {
 
 /**
  * Runs the current test only in the specified browser, platform or against url.
- * @param {string|boolean} name - condition, could be platform, browser name, url or true|false.
+ * @param {string|boolean|Function} name - condition, could be platform, browser name, url or true|false.
  * @param {() => void} cb - Optional, run the given callback if the condition passes
  */
 const onlyOn = (name, cb) => {
@@ -238,6 +250,14 @@ const onlyOn = (name, cb) => {
     throw new Error(
       'Invalid syntax: cy.onlyOn(<name>), for example cy.onlyOn("linux")'
     )
+  }
+
+  if (isAsyncFn(name)) {
+    return name().then((result) => onlyOnBool(result, cb))
+  }
+
+  if (_.isFunction(name)) {
+    return onlyOnBool(name(), cb)
   }
 
   if (cb) {

@@ -146,6 +146,22 @@ onlyOn(S === 'foo', () => {
 })
 ```
 
+Also you can pass sync and async function returning boolean flag.
+
+```js
+// run this test if function returns true
+const fnReturningTrue = () => true
+
+cy.onlyOn(fnReturningTrue())
+```
+
+```js
+// run this test if async function returns true
+const fnReturningPromiseTrue = () => new Promise((resolve) => resolve(true))
+
+cy.onlyOn(fnReturningPromiseTrue())
+```
+
 You can even run other Cypress commands before deciding to skip or continue
 
 ```js
