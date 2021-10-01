@@ -8,7 +8,7 @@ describe('skipping at run-time', () => {
   // particular test we want to focus on
   const title = 'skips this test on Electron'
 
-  const assertResults = results => {
+  const assertResults = (results) => {
     // let's confirm the number of tests
     // and maybe some additional information
     debug('results %o', results)
@@ -21,10 +21,10 @@ describe('skipping at run-time', () => {
     assert(results.runs.length === 1, 'single run')
   }
 
-  const findOurTest = results => {
+  const findOurTest = (results) => {
     debug('looking for test with title "%s"', title)
     const testSkippedOnElectron = results.runs[0].tests.find(
-      t => t.title[0] === title
+      (t) => t.title[0] === title
     )
     debug('found test %o', testSkippedOnElectron)
     assert(testSkippedOnElectron, 'could not find test')
@@ -40,17 +40,34 @@ describe('skipping at run-time', () => {
         headless: true,
         video: false
       })
-      .then(results => {
+      .then((results) => {
         assertResults(results)
         const test = findOurTest(results)
         debug('found test object %o', test)
 
         // the test should be pending (which means it was skipped)
-        spok(assert, test, {
-          title,
-          state: 'pending',
-          error: 'sync skip; aborting execution'
-        })
+        // Cypress v6+ puts error in attempts array
+        if (Array.isArray(test.attempts)) {
+          spok(assert, test, {
+            title,
+            state: 'pending'
+          })
+          const lastAttempt = test.attempts[test.attempts.length - 1]
+          debug('last attempt %o', lastAttempt)
+
+          spok(assert, lastAttempt, {
+            state: 'pending',
+            error: {
+              message: 'sync skip; aborting execution'
+            }
+          })
+        } else {
+          spok(assert, test, {
+            title,
+            state: 'pending',
+            error: 'sync skip; aborting execution'
+          })
+        }
       })
   })
 
@@ -61,7 +78,7 @@ describe('skipping at run-time', () => {
         browser: 'chrome',
         video: false
       })
-      .then(results => {
+      .then((results) => {
         assertResults(results)
         const test = findOurTest(results)
 

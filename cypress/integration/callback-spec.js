@@ -31,3 +31,30 @@ it('does not run given function for other environments', () => {
   })
   expect(called, 'callback was NOT called').to.be.undefined
 })
+
+it('does not run given function for some environment', () => {
+  Cypress.env('ENVIRONMENT', 'test1')
+  let called
+  skipOn('test1', () => {
+    called = true
+  })
+  expect(called, 'callback was called').to.be.undefined
+})
+
+it('runs given function for other environments', () => {
+  Cypress.env('ENVIRONMENT', 'test1')
+  let called
+  skipOn('testX', () => {
+    called = true
+  })
+  expect(called, 'callback was NOT called').to.be.true
+})
+
+it('ignores non-string environment', () => {
+  Cypress.env('ENVIRONMENT', 42)
+  let called
+  skipOn('42', () => {
+    called = true
+  })
+  expect(called, 'callback was NOT called').to.be.true
+})

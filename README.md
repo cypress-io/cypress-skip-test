@@ -146,16 +146,32 @@ onlyOn(S === 'foo', () => {
 })
 ```
 
+Also you can pass sync and async function returning boolean flag.
+
+```js
+// run this test if function returns true
+const fnReturningTrue = () => true
+
+cy.onlyOn(fnReturningTrue())
+```
+
+```js
+// run this test if async function returns true
+const fnReturningPromiseTrue = () => new Promise((resolve) => resolve(true))
+
+cy.onlyOn(fnReturningPromiseTrue())
+```
+
 You can even run other Cypress commands before deciding to skip or continue
 
 ```js
 it('runs if task returns production', () => {
-  cy.task('getDbName').then(name => cy.onlyOn(name === 'production'))
+  cy.task('getDbName').then((name) => cy.onlyOn(name === 'production'))
   // equivalent
-  cy.task('getDbName').then(name => onlyOn(name === 'production'))
+  cy.task('getDbName').then((name) => onlyOn(name === 'production'))
   // equivalent
   cy.task('getDbName')
-    .then(name => name === 'production')
+    .then((name) => name === 'production')
     .then(onlyOn)
 })
 ```
@@ -213,7 +229,7 @@ CYPRESS_ENVIRONMENT=staging npx cypress run
 Inside the spec file you can write
 
 ```js
-import {onlyOn} from '@cypress/skip-test'
+import {onlyOn, skipOn} from '@cypress/skip-test'
 const stubServer = () => {
   cy.server()
   cy.route('/api/me', 'fx:me.json')
@@ -224,9 +240,12 @@ it('works', () => {
   onlyOn('staging', stubServer)
   ...
 })
+skipOn('staging', () => {
+  it('works on non-staging', () => {...})
+})
 ```
 
-The test `works` will stub network calls when running on `staging`, but will skip calling `stubServer` for other environments.
+The test `works` will stub network calls when running on `staging`, but will skip calling `stubServer` for other environments. The test `works on non-staging` will be skipped when the environment is `staging`.
 
 ### Notes
 
