@@ -35,7 +35,7 @@ require('@cypress/skip-test/support')
 Skip this test if running in Electron browser
 
 ```js
-it('only runs on Electron', () => {
+it('runs on everything except Electron', () => {
   cy.skipOn('electron')
   // the rest of the test
 })
