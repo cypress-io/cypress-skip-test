@@ -130,7 +130,7 @@ const skipOnBool = (flag, cb) => {
 }
 
 /**
- * Skips the current test based on the browser, platform or url.
+ * Skips the current test only in the specified browser, platform or against url.
  * @param {string|boolean|Function} name - condition, could be platform, browser name, url or true|false.
  * @param {() => void} cb - Optional, run the given callback if the condition passes
  */
@@ -153,64 +153,16 @@ const skipOn = (name, cb) => {
     )
   }
 
-  const normalizedName = normalizeName(name)
-
   if (cb) {
-    if (isPlatform(normalizedName)) {
-      if (Cypress.platform !== normalizedName) {
-        return cb()
-      }
-      return
-    }
-
-    if (isBrowser(normalizedName)) {
-      if (!checkBrowserName(normalizedName)) {
-        return cb()
-      }
-      return it(`Skipping test(s) on ${normalizedName}`)
-    }
-
-    if (isHeadedName(normalizedName)) {
-      if (!headedMatches(normalizedName)) {
-        return cb()
-      }
-      return it(`Skipping test(s) in ${normalizedName} mode`)
-    }
-
-    if (isEnvironmentSet()) {
-      if (!isEnvironment(normalizedName)) {
-        return cb()
-      }
-      return it(`Skipping test(s) on ${normalizedName} environment`)
-    }
-
-    if (!matchesUrlPart(normalizedName)) {
+    if (!isOn(name)) {
       return cb()
+    } else {
+      return it(`Skipping test(s), on ${name}`)
     }
   } else {
+    const normalizedName = normalizeName(name)
     cy.log(`skipOn **${normalizedName}**`)
-
-    if (isPlatform(normalizedName)) {
-      if (Cypress.platform === normalizedName) {
-        skip()
-      }
-      return
-    }
-
-    if (isBrowser(normalizedName)) {
-      if (checkBrowserName(normalizedName)) {
-        skip()
-      }
-      return
-    }
-
-    if (isEnvironmentSet()) {
-      if (isEnvironment(normalizedName)) {
-        return skip()
-      }
-    }
-
-    if (matchesUrlPart(normalizedName)) {
+    if (isOn(name)) {
       return skip()
     }
   }
